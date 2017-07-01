@@ -8,25 +8,16 @@
 		<version>develop-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>my-project-translator</artifactId>
+	<artifactId>my-project-common</artifactId>
 
-	<name>My Project Translator</name>
-	<description>My Project specific translation like SSR etc.</description>
+	<name>My Project Common</name>
+	<description>My Project Common Utility Classes</description>
 
-	<properties>
-		<apache.poi.version>3.10-FINAL</apache.poi.version>
-	</properties>
-	
 	<dependencies>
 		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-			<version>${apache.poi.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId>
-			<version>${apache.poi.version}</version>
+			<groupId>com.test.project</groupId>
+			<artifactId>my-project-translator</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -35,19 +26,20 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${spring.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.test.project</groupId>
-			<artifactId>my-project-exception</artifactId>
+			<artifactId>my-project-connector</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>sonar-maven-plugin</artifactId>
-				<version>${sonar.maven.plugin.version}</version>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
