@@ -20,6 +20,11 @@
 			<artifactId>spring-core</artifactId>
 			<version>4.1.5.RELEASE</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.maven.shared</groupId>
+			<artifactId>maven-invoker</artifactId>
+			<version>3.0.0</version>
+		</dependency>
 	</dependencies>
 	<profiles>
 		<profile>
