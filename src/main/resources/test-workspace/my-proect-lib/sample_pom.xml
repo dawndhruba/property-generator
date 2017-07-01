@@ -1,0 +1,59 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.test.project</groupId>
+	<version>develop-SNAPSHOT</version>
+
+	<properties>
+		<java.version>1.8</java.version>
+		<skipTests>false</skipTests>
+		<coberturaVersion>2.5.1</coberturaVersion>
+		<reportsPluginVersion>2.4</reportsPluginVersion>
+		<maven.plugins.pmd.version>2.7.1</maven.plugins.pmd.version>
+		<pmd.rulesets.location>/mnt/jenkins/config/userContent/pmd</pmd.rulesets.location>
+		<maven.plugins.checkstyle.version>2.9</maven.plugins.checkstyle.version>
+		<junit.version>4.12</junit.version>
+		<cxf.version>2.7.10</cxf.version>
+		<maven.surefire.plugin.version>2.19.1</maven.surefire.plugin.version>
+		<maven.compiler.plugin.version>3.1</maven.compiler.plugin.version>
+		<sonar.maven.plugin.version>3.0.2</sonar.maven.plugin.version>
+		<spring.version>4.1.5.RELEASE</spring.version>
+	</properties>
+
+	<artifactId>my-project-lib</artifactId>
+	<packaging>pom</packaging>
+
+	<name>Common Libraries for My Project</name>
+	<description>My Project Common Libraries like Connectors, Mocking
+		Library, Reference data Specific to My Project Etc.</description>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>sonar-maven-plugin</artifactId>
+				<version>${sonar.maven.plugin.version}</version>
+			</plugin>
+		</plugins>
+	</build>
+
+	<modules>
+		<module>my-project-connector</module>
+		<module>my-project-translator</module>
+		<module>my-project-common</module>
+	</modules>
+
+	<distributionManagement>
+		<repository>
+			<id>sample.test.repo</id>
+			<name>Test Sample Release Repository</name>
+			<url>${test.maven.path}/content/repositories/releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>sample.test.repo</id>
+			<name>Test Sample Snapshot Repository</name>
+			<url>${test.maven.path}/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+</project>

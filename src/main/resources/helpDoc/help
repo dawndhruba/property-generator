@@ -4,7 +4,7 @@ Get effective pom -
 
 mvn help:effective-pom -Doutput=< FILE >
 ------------------------------------------------------------------------------------------
-mvn clean install -Ppropgen -Dworkspace=D:\Workspaces -DprojectName=ryan-air-common
+mvn clean install -Ppropgen -Dworkspace=D:\Workspaces -DprojectName=my-project-common
 ------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------
