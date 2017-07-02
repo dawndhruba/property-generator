@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -29,6 +31,7 @@ import org.w3c.dom.NodeList;
 public class PropertiesGenerator {
 
 	private static final String PROJECT_VERSION = "develop-SNAPSHOT";
+	private static final Map<String, Integer> DUPLICATE_PROPERTY_COUNT = new HashMap<String, Integer>();
 
 	public static void main(String[] args) {
 
@@ -41,14 +44,21 @@ public class PropertiesGenerator {
 		try {
 			String workspace = args[0];
 			String projectName = args[1];
+			String projectVersion = args[2];
 			System.out.println("\n[INFO] Received workspace path : " + workspace);
 			System.out.println("[INFO] Received project name   : " + projectName);
+			System.out.println("[INFO] Received project version: " + projectVersion);
 
 			if (StringUtils.isEmpty(workspace) || StringUtils.isEmpty(projectName)) {
 				workspace = "src\\main\\resources\\test-workspace";
 				projectName = "my-project-lib";
 				System.out.println("\n[WARN] Incorrect or missing arguments...");
 				System.out.println("[WARN] Using hardcoded workspace, project: " + workspace + ", " + projectName);
+			}
+			if (StringUtils.isEmpty(projectVersion)) {
+				projectVersion = PROJECT_VERSION;
+				System.out.println("\n[WARN] Missing project version...");
+				System.out.println("[WARN] Using hardcoded project version: " + projectVersion);
 			}
 
 			String projectPath = null;
@@ -104,11 +114,12 @@ public class PropertiesGenerator {
 
 					if (versionNode != null && version.startsWith("$")) {
 						if ("${project.version}".equalsIgnoreCase(version)) {
-							isPomUpdated = addProjectVersionProperty(document, projectNode, artifactId, versionNode, isPomUpdated);
+							isPomUpdated = addPropertyAndVersion(document, projectNode, artifactId, projectVersion,
+									versionNode, isPomUpdated);
 						}
 					} else if (versionNode != null) {
-						isPomUpdated = addHardcodedVersionProperty(document, projectNode, artifactId, version,
-								versionNode, isPomUpdated);
+						isPomUpdated = addPropertyAndVersion(document, projectNode, artifactId, version, versionNode,
+								isPomUpdated);
 					}
 				}
 				
@@ -166,32 +177,13 @@ public class PropertiesGenerator {
 		}
 	}
 
-	private static boolean addHardcodedVersionProperty(Document document, Node projectNode,
+	private static boolean addPropertyAndVersion(Document document, Node projectNode,
 			String artifactId, String version, Node versionNode, boolean isPomUpdated) throws Exception {
 		String propertyName = createPropertyName(artifactId);
 		System.out.println("\n[INFO] Adding : <" + propertyName + ">" + version + "</" + propertyName + ">");
 
 		boolean isPropertyAdded = addProperties(document, projectNode, propertyName, version);
 		
-		//If anything is already updated do not need to check again
-		if(!isPomUpdated && isPropertyAdded) {
-			isPomUpdated = isPropertyAdded; 
-		}
-		
-		//update <version> in <dependency>
-		versionNode.setTextContent("${" + propertyName + "}");
-		System.out.println("[SUCCESS] dependency version updated !");
-		
-		return isPomUpdated;
-	}
-
-	private static boolean addProjectVersionProperty(Document document, Node projectNode,
-			String artifactId, Node versionNode, boolean isPomUpdated) throws Exception {
-		String propertyName = createPropertyName(artifactId);
-		System.out.println("\n[INFO] Adding : <" + propertyName + ">" + PROJECT_VERSION + "</" + propertyName + ">");
-		
-		boolean isPropertyAdded = addProperties(document, projectNode, propertyName, PROJECT_VERSION);
-
 		//If anything is already updated do not need to check again
 		if(!isPomUpdated && isPropertyAdded) {
 			isPomUpdated = isPropertyAdded; 
@@ -300,8 +292,22 @@ public class PropertiesGenerator {
 		return false;
 	}
 
-	private static String createPropertyName(String artifactId) {
-		String property = artifactId.replaceAll("-", ".");
-		return property + ".version";
+	/**
+	 * This method creates property name from artifactid and checks for
+	 * duplicate property entry if artifactid is same for multiple dependency
+	 * 
+	 * @param artifactId
+	 * @return property name
+	 */
+	private static String createPropertyName(final String artifactId) {
+		String property = artifactId.replaceAll("-", ".").concat(".version");
+		Integer existingCount = DUPLICATE_PROPERTY_COUNT.get(property);
+		if (existingCount == null) {
+			DUPLICATE_PROPERTY_COUNT.put(property, 1);
+		} else {
+			DUPLICATE_PROPERTY_COUNT.put(property, existingCount++);
+			property = property.concat(String.valueOf(existingCount));
+		}
+		return property;
 	}
 }

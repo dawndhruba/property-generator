@@ -51,6 +51,7 @@
 							<arguments>
 								<argument>${workspace}</argument>
 								<argument>${projectName}</argument>
+								<argument>${projectVersion}</argument>
 							</arguments>
 						</configuration>
 					</plugin>
