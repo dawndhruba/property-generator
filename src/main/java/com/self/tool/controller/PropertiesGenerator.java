@@ -13,10 +13,13 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.maven.model.Model;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import com.self.tool.maven.utility.MavenPomReader;
 
 public class PropertiesGenerator {
 
@@ -52,6 +55,8 @@ public class PropertiesGenerator {
 				pomFilePath = workspace + "\\" + projectName + "\\sample_pom.xml";
 			}
 
+			Model pomModel = MavenPomReader.readModel(new File(workspace), projectName);
+			
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 			Document document = docBuilder.parse(pomFilePath);
